@@ -1,9 +1,10 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import { AppRouter } from "./router";
 
 export const TodoApp = () => {
   return (
     <ChakraProvider>
-      <h1>TodoApp</h1>
+      <AppRouter />
     </ChakraProvider>
   );
 };
