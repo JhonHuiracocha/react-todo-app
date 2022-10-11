@@ -1,16 +1,12 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useContext } from "react";
-import { useDebouncedCallback } from "use-debounce";
-import { BreakpointContext, SearchContext } from "../";
+import { useNavigate } from "react-router-dom";
+import { BreakpointContext } from "../";
 
 export const SearchTodo = () => {
-  const { setSearch } = useContext(SearchContext);
+  const navigate = useNavigate();
   const { fontSize } = useContext(BreakpointContext);
-
-  const debounced = useDebouncedCallback((value) => {
-    setSearch(value);
-  }, 1000);
 
   return (
     <Formik
@@ -22,7 +18,7 @@ export const SearchTodo = () => {
 
         if (!name) return;
 
-        setSearch(name);
+        navigate(`/search?q=${name}`);
       }}
     >
       {({ handleSubmit, handleChange, values }) => (
@@ -33,12 +29,9 @@ export const SearchTodo = () => {
               fontSize={fontSize}
               type="text"
               name="name"
-              placeholder="Enter name"
+              placeholder="Enter a title"
               value={values.name}
-              onChange={(e) => {
-                handleChange(e);
-                debounced(e.target.value);
-              }}
+              onChange={handleChange}
             />
           </FormControl>
         </Form>

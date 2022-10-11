@@ -6,7 +6,13 @@ export const initialState = {
 
 export const todoReducer = (state = initialState, action) => {
   switch (action.type) {
-    case todoTypes.init:
+    case todoTypes.getTodos:
+      return {
+        ...state,
+        todos: [...action.payload],
+      };
+
+    case todoTypes.setSearchedTodos:
       return {
         ...state,
         todos: [...action.payload],

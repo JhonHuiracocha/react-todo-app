@@ -18,6 +18,12 @@ export const updateTaskById = (id, updatedTask) => {
   return axios.patch(`${baseUlr}/tasks/${id}`, updatedTask);
 };
 
+export const getTasksByQuery = (title, take = 10, skip = 0) => {
+  return axios.get(`${baseUlr}/tasks/search`, {
+    params: { title, take, skip },
+  });
+};
+
 export const deleteTaskById = (id) => {
   return axios.delete(`${baseUlr}/tasks/${id}`);
 };
