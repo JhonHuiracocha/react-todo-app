@@ -1,25 +1,20 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { getTaks } from "../../api";
+import { useContext } from "react";
 import { TodoItem } from "./";
+import { BreakpointContext, SearchContext, TodoContext } from "../";
 
 export const TodoList = () => {
-  const [tasks, setTasks] = useState([]);
-
-  const getTasks = async () => {
-    const { data } = await getTaks();
-    setTasks(data);
-  };
-
-  useEffect(() => {
-    getTasks();
-  }, []);
+  const { todos } = useContext(TodoContext);
+  const { filter } = useContext(SearchContext);
+  const { gridListColumns } = useContext(BreakpointContext);
 
   return (
-    <SimpleGrid columns={{ sm: 2, md: 3 }} spacing={3}>
-      {tasks?.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} />
-      ))}
+    <SimpleGrid columns={gridListColumns} spacing={3}>
+      {filter === "all"
+        ? todos.map((todo) => <TodoItem key={todo.id} todo={todo} />)
+        : todos
+            ?.filter((todo) => todo.states === filter)
+            .map((todo) => <TodoItem key={todo.id} todo={todo} />)}
     </SimpleGrid>
   );
 };

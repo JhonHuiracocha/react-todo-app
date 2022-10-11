@@ -1,13 +1,16 @@
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useContext } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import { BreakpointContext, SearchContext } from "../";
 
 export const SearchTodo = () => {
-  const breakpoint = useBreakpointValue({ base: "sm", lg: "md" });
+  const { setSearch } = useContext(SearchContext);
+  const { fontSize } = useContext(BreakpointContext);
+
+  const debounced = useDebouncedCallback((value) => {
+    setSearch(value);
+  }, 1000);
 
   return (
     <Formik
@@ -19,20 +22,23 @@ export const SearchTodo = () => {
 
         if (!name) return;
 
-        console.log(values);
+        setSearch(name);
       }}
     >
       {({ handleSubmit, handleChange, values }) => (
         <Form onSubmit={handleSubmit} autoComplete="off">
           <FormControl>
-            <FormLabel fontSize={breakpoint}>Search todo:</FormLabel>
+            <FormLabel fontSize={fontSize}>Search todo:</FormLabel>
             <Input
-              fontSize={breakpoint}
+              fontSize={fontSize}
               type="text"
               name="name"
               placeholder="Enter name"
               value={values.name}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                debounced(e.target.value);
+              }}
             />
           </FormControl>
         </Form>

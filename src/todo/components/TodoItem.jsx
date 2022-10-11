@@ -1,37 +1,30 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import {
-  Badge,
-  Box,
-  Button,
-  Stack,
-  Text,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Badge, Box, Button, Stack, Text } from "@chakra-ui/react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { BreakpointContext, TodoContext } from "../";
 
-const stateColors = {
+const STATE_COLORS = {
   pending: "teal",
   deleted: "red",
   completed: "linkedin",
 };
 
-const defaultStateColor = "teal";
+const DEFAULT_STATE_COLOR = "teal";
 
 export const TodoItem = ({ todo }) => {
-  const breakpoint = useBreakpointValue({ base: "sm", lg: "md" });
-  const badgeSize = useBreakpointValue({ base: ".70rem", lg: ".75rem" });
-
-  const { id, title, description, states } = todo;
+  const { onDeleteTodo } = useContext(TodoContext);
+  const { badgeSize, buttonSize, fontSize } = useContext(BreakpointContext);
 
   return (
     <Box p={2} maxW="xl" borderWidth="1px" borderRadius="lg">
       <Badge
         borderRadius="full"
         px="2"
-        colorScheme={`${stateColors[states] || defaultStateColor}`}
+        colorScheme={`${STATE_COLORS[todo.states] || DEFAULT_STATE_COLOR}`}
         fontSize={badgeSize}
       >
-        {states}
+        {todo.states}
       </Badge>
 
       <Box
@@ -40,20 +33,20 @@ export const TodoItem = ({ todo }) => {
         as="h4"
         lineHeight="tight"
         noOfLines={1}
-        fontSize={breakpoint}
+        fontSize={fontSize}
       >
-        {title}
+        {todo.title}
       </Box>
 
-      <Text fontSize={breakpoint}>{description}</Text>
+      <Text fontSize={fontSize}>{todo.description}</Text>
 
       <Stack direction="row" spacing={4} py={2}>
-        <Link to={`/todos/${id}`}>
+        <Link to={`/todos/${todo.id}`}>
           <Button
             leftIcon={<EditIcon />}
             colorScheme="teal"
             variant="outline"
-            size={breakpoint}
+            size={buttonSize}
           >
             Edit
           </Button>
@@ -62,7 +55,8 @@ export const TodoItem = ({ todo }) => {
           rightIcon={<DeleteIcon />}
           colorScheme="teal"
           variant="solid"
-          size={breakpoint}
+          size={buttonSize}
+          onClick={() => onDeleteTodo(todo.id)}
         >
           Delete
         </Button>
