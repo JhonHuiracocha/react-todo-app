@@ -1,19 +1,24 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { createTask, deleteTaskById, getTaks, updateTaskById } from "../../api";
 import { initialState, todoReducer, todoTypes } from "../";
 
 export const useTodos = () => {
   const [state, dispatch] = useReducer(todoReducer, initialState);
 
-  useEffect(() => {
-    init();
-  }, []);
+  const setSearchedTodos = (todos) => {
+    const action = {
+      type: todoTypes.setSearchedTodos,
+      payload: todos,
+    };
 
-  const init = async () => {
+    dispatch(action);
+  };
+
+  const getTodos = async () => {
     const { data } = await getTaks();
 
     const action = {
-      type: todoTypes.init,
+      type: todoTypes.getTodos,
       payload: data,
     };
 
@@ -58,6 +63,8 @@ export const useTodos = () => {
 
   return {
     todos: state.todos || initialState.todos,
+    getTodos,
+    setSearchedTodos,
     onNewTodo,
     onUpdateTodo,
     onDeleteTodo,
